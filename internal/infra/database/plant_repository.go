@@ -51,6 +51,21 @@ func (r plantRepository) Save(p domain.Plant) (domain.Plant, error) {
 	return p, nil
 }
 
+func (r plantRepository) FindList(uId uint64) ([]domain.Plant, error) {
+	var plants []plant
+
+	err := r.coll.Find(db.Cond{
+		"user_id":    uId,
+		"deleted_at": nil,
+	}).All(&plants)
+	if err != nil {
+		return nil, err
+	}
+
+	ps := r.mapModelToDomainCollection(plants)
+	return ps, nil
+}
+
 func (r plantRepository) mapDomainToModel(p domain.Plant) plant {
 	return plant{
 		Id:        p.Id,
@@ -77,4 +92,12 @@ func (r plantRepository) mapModelToDomain(p plant) domain.Plant {
 		UpdatedAt: p.UpdatedAt,
 		DeletedAt: p.DeletedAt,
 	}
+}
+
+func (r plantRepository) mapModelToDomainCollection(plants []plant) []domain.Plant {
+	ps := make([]domain.Plant, len(plants))
+	for i, p := range plants {
+		ps[i] = r.mapModelToDomain(p)
+	}
+	return ps
 }
