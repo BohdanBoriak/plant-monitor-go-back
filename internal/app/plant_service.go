@@ -9,6 +9,7 @@ import (
 
 type PlantService interface {
 	Save(p domain.Plant) (domain.Plant, error)
+	FindList(uId uint64) ([]domain.Plant, error)
 }
 
 type plantService struct {
@@ -29,4 +30,14 @@ func (s plantService) Save(p domain.Plant) (domain.Plant, error) {
 	}
 
 	return plant, nil
+}
+
+func (s plantService) FindList(uId uint64) ([]domain.Plant, error) {
+	plants, err := s.plantRepo.FindList(uId)
+	if err != nil {
+		log.Printf("plantService.FindList(s.plantRepo.FindList): %s", err)
+		return nil, err
+	}
+
+	return plants, nil
 }

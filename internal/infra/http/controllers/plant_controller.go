@@ -44,3 +44,19 @@ func (c PlantController) Save() http.HandlerFunc {
 		Created(w, resp)
 	}
 }
+
+func (c PlantController) FindList() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		user := r.Context().Value(UserKey).(domain.User)
+
+		plants, err := c.plantService.FindList(user.Id)
+		if err != nil {
+			log.Printf("PlantController.FindList(c.plantService.FindList): %s", err)
+			InternalServerError(w, err)
+			return
+		}
+
+		resp := resources.PlantDto{}.DomainToDtoCollection(plants)
+		Success(w, resp)
+	}
+}

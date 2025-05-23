@@ -23,6 +23,7 @@ type plant struct {
 
 type PlantRepository interface {
 	Save(p domain.Plant) (domain.Plant, error)
+	FindList(uId uint64) ([]domain.Plant, error)
 }
 
 type plantRepository struct {

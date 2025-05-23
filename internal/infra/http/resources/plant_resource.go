@@ -21,3 +21,11 @@ func (d PlantDto) DomainToDto(p domain.Plant) PlantDto {
 		Type:    p.Type,
 	}
 }
+
+func (d PlantDto) DomainToDtoCollection(plants []domain.Plant) []PlantDto {
+	plantsDto := make([]PlantDto, len(plants))
+	for i, p := range plants {
+		plantsDto[i] = d.DomainToDto(p)
+	}
+	return plantsDto
+}
